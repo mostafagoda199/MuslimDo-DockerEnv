@@ -1,0 +1,193 @@
+version: "3"
+
+services:
+
+  webserver-gateway:
+    build: 
+      context: ./bin/${PHPVERSION}
+    container_name: '${COMPOSE_PROJECT_NAME}-gateway-${PHPVERSION}'
+    tty: true
+    networks:
+      - backend
+    restart: 'always'
+    ports:
+      - "${HOST_MACHINE_UNSECURE_HOST_PORT_GATEWAY}:80"
+      - "${HOST_MACHINE_SECURE_HOST_PORT_GATEWAY}:443"
+    links: 
+      - database
+    volumes: 
+      - ${DOCUMENT_ROOT_GATEWAY-./www/gateway}:/var/www/html/gateway
+      - ~/.ssh:/home/mustafa/.ssh
+      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+    environment:
+      APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT_GATEWAY-/var/www/html/gateway/public}
+      PMA_PORT: ${HOST_MACHINE_PMA_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  webserver-users:
+    build:
+      context: ./bin/${PHPVERSION}
+    container_name: '${COMPOSE_PROJECT_NAME}-users-${PHPVERSION}'
+    tty: true
+    networks:
+      - backend
+    restart: 'always'
+    ports:
+      - "${HOST_MACHINE_UNSECURE_HOST_PORT_USER}:80"
+      - "${HOST_MACHINE_SECURE_HOST_PORT_USER}:443"
+    links:
+      - database
+    volumes:
+      - ${DOCUMENT_ROOT_USER-./www/users}:/var/www/html/users
+      - ~/.ssh:/home/mustafa/.ssh
+      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+    environment:
+      APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT_USER-/var/www/html/users/public}
+      PMA_PORT: ${HOST_MACHINE_PMA_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  webserver-entities:
+    build:
+      context: ./bin/${PHPVERSION}
+    container_name: '${COMPOSE_PROJECT_NAME}-entities-${PHPVERSION}'
+    tty: true
+    networks:
+      - backend
+    restart: 'always'
+    ports:
+      - "${HOST_MACHINE_UNSECURE_HOST_PORT_ENTITIES}:80"
+      - "${HOST_MACHINE_SECURE_HOST_PORT_ENTITIES}:443"
+    links:
+      - database
+    volumes:
+      - ${DOCUMENT_ROOT_ENTITY-./www/entities}:/var/www/html/entities
+      - ~/.ssh:/home/mustafa/.ssh
+      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+    environment:
+      APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT_ENTITY-/var/www/html/entities/public}
+      PMA_PORT: ${HOST_MACHINE_PMA_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  webserver-dashboard:
+    build:
+      context: ./bin/${PHPVERSION}
+    container_name: '${COMPOSE_PROJECT_NAME}-dashboard-${PHPVERSION}'
+    tty: true
+    restart: 'always'
+    ports:
+      - "${HOST_MACHINE_UNSECURE_HOST_PORT_DASHBOARD}:80"
+      - "${HOST_MACHINE_SECURE_HOST_PORT_DASHBOARD}:443"
+    links:
+      - database
+    networks:
+      - backend
+    volumes:
+      - ${DOCUMENT_ROOT_ACTIVITIES-./www/dashboard}:/var/www/html/activities
+      - ~/.ssh:/home/mustafa/.ssh
+      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+    environment:
+      APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT_DASHBOARD-/var/www/html/dashboard/public}
+      PMA_PORT: ${HOST_MACHINE_PMA_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  webserver-activities:
+    build:
+      context: ./bin/${PHPVERSION}
+    container_name: '${COMPOSE_PROJECT_NAME}-activities-${PHPVERSION}'
+    tty: true
+    restart: 'always'
+    ports:
+      - "${HOST_MACHINE_UNSECURE_HOST_PORT_ACTIVITIES}:80"
+      - "${HOST_MACHINE_SECURE_HOST_PORT_ACTIVITIES}:443"
+    links:
+      - database
+    networks:
+      - backend
+    volumes:
+      - ${DOCUMENT_ROOT_ACTIVITIES-./www/activities}:/var/www/html/activities
+      - ~/.ssh:/home/mustafa/.ssh
+      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+    environment:
+      APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT_ACTIVITIES-/var/www/html/activities/public}
+      PMA_PORT: ${HOST_MACHINE_PMA_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  webserver-payment:
+    build:
+      context: ./bin/${PHPVERSION}
+    container_name: '${COMPOSE_PROJECT_NAME}-payment-${PHPVERSION}'
+    tty: true
+    restart: 'always'
+    ports:
+      - "${HOST_MACHINE_UNSECURE_HOST_PORT_PAYMENT}:80"
+      - "${HOST_MACHINE_SECURE_HOST_PORT_PAYMENT}:443"
+    links:
+      - database
+    networks:
+      - backend
+    volumes:
+      - ${DOCUMENT_ROOT_PAYMENT-./www/payment}:/var/www/html/payment
+      - ~/.ssh:/home/mustafa/.ssh
+      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
+      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+    environment:
+      APACHE_DOCUMENT_ROOT: ${APACHE_DOCUMENT_ROOT_PAYMENT-/var/www/html/payment/public}
+      PMA_PORT: ${HOST_MACHINE_PMA_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  database:
+    build:
+      context: "./bin/${DATABASE}"
+    container_name: '${COMPOSE_PROJECT_NAME}-database'
+    restart: always
+    ports:
+      - "127.0.0.1:${HOST_MACHINE_MYSQL_PORT}:3306"
+    volumes: 
+      - ${MYSQL_DATA_DIR}:/var/lib/mysql
+      - ${MYSQL_LOG_DIR}:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+        - backend
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: '${COMPOSE_PROJECT_NAME}-phpmyadmin'
+    links:
+      - database
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - '${HOST_MACHINE_PMA_PORT}:80'
+    networks:
+      - backend
+    volumes: 
+      - /sessions
+      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
+  redis:
+    container_name: '${COMPOSE_PROJECT_NAME}-redis'
+    image: redis:latest
+    ports:
+      - "127.0.0.1:${HOST_MACHINE_REDIS_PORT}:6379"
+
+networks:
+  backend:
