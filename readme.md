@@ -1,20 +1,15 @@
 # To install project
     1.install docker 
     2.install docker-composer
+# change Owner Role add to the end of file  /bin/php$(v) 
+    RUN chown $(user) /var/www/html
+    USER $(user)
     
-# Clone this repo
-    git clone https://github.com/mostafagoda199/LampEnvWithDocker.git
-
-# Repair your env
-    make dir with name www
-    rename .env-sample to .env
-    rename docker-compose-sample.yml to docker-compose.yml
-
 # Up docker images
-    run "docker compose up -d" 
+    docker compose up -d
 
 # Rebuild docker images
-    run "docker compose up -d --no-deps --build" 
+    docker compose up -d --no-deps --build
 
 # Down docker images
     sudo docker-compose down
